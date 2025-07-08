@@ -12,13 +12,17 @@ document.addEventListener("DOMContentLoaded", function () {
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
-  // 🔐 Session ID per user
   let sessionId = localStorage.getItem("chatSessionId");
   if (!sessionId) {
     sessionId = Date.now().toString() + "-" + Math.random().toString(36).substring(2);
     localStorage.setItem("chatSessionId", sessionId);
   }
-    function askNameIfNew() {
+
+  let isAdmin = false;
+  let displayName = "Anonymous";
+
+  // ✅ Prompt name on first use
+  function askNameIfNew() {
     db.collection("users").doc(sessionId).get().then(doc => {
       if (doc.exists) {
         displayName = doc.data().name || "Anonymous";
@@ -37,25 +41,19 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-
-  // 🛡️ Admin detection
-  let isAdmin = false;
-  let displayName = "Anonymous";
-
+  // 🛡️ Check admin status
   function checkAdmin() {
     db.collection("admin").doc(sessionId).get().then(doc => {
       if (doc.exists && doc.data().isAdmin) {
         isAdmin = true;
-        displayName = doc.data().name || "AdminMaruya";
+        displayName = doc.data().name || "ADMINMARUYA"
         console.log("🔐 Admin mode enabled:", displayName);
-      } else {
-        displayName = "User";
       }
       loadMessages();
     });
   }
 
-  // ✏️ Send a message
+  // ✉️ Send message
   function sendMessage() {
     const message = document.getElementById("message").value.trim();
     if (!message) return;
@@ -70,14 +68,14 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("message").value = '';
   }
 
-  // 🧹 Delete message (if admin)
+  // 🗑️ Delete (admin only)
   function deleteMessage(id) {
     if (isAdmin && confirm("Delete this message?")) {
       db.collection("messages").doc(id).delete();
     }
   }
 
-  // 🖼️ Render chat messages
+  // 🖼️ Render chat
   function renderMessage(doc) {
     const data = doc.data();
     const time = data.timestamp?.toDate().toLocaleTimeString() || '';
@@ -89,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
       </p>`;
   }
 
-  // 🔃 Load and show chat messages
+  // 🔃 Load all messages
   function loadMessages() {
     db.collection("messages").orderBy("timestamp").onSnapshot(snapshot => {
       const chat = document.getElementById("chat");
@@ -101,10 +99,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // 👇 Expose to HTML
+  // ⏯️ Start
   window.sendMessage = sendMessage;
   window.deleteMessage = deleteMessage;
   askNameIfNew(); // kick off name setup
-  // ✅ Start by checking if user is admin
-  checkAdmin();
 });
