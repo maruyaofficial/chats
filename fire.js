@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let displayName = "Anonymous";
 
   function checkAdmin() {
-    db.collection("admins").doc(sessionId).get().then(doc => {
+    db.collection("admin").doc(sessionId).get().then(doc => {
       if (doc.exists && doc.data().isAdmin) {
         isAdmin = true;
         displayName = doc.data().name || "Admin";
