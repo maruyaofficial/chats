@@ -1,19 +1,21 @@
 .chatbox-container {
   max-width: 500px;
-  margin: auto;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  font-family: Arial, sans-serif;
+  margin: 30px auto;
+  padding: 20px;
+  background: #f2f2f2; /* 👈 Light gray background */
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-family: sans-serif;
 }
+
 .chat-window {
-  border: 1px solid #ccc;
   height: 300px;
   overflow-y: auto;
+  background: #ffffff;
   padding: 10px;
+  border: 1px solid #ccc;
   margin-bottom: 10px;
-  background: #fff;
+  border-radius: 6px;
 }
 input[type="text"] {
   width: calc(100% - 80px);
