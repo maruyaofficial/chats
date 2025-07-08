@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // 👇 Expose to HTML
   window.sendMessage = sendMessage;
   window.deleteMessage = deleteMessage;
-
+  askNameIfNew(); // kick off name setup
   // ✅ Start by checking if user is admin
   checkAdmin();
 });
