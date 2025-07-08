@@ -12,30 +12,37 @@ document.addEventListener("DOMContentLoaded", function () {
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
-  // 🆔 Session ID to track anonymous users
+  // 🔐 Session ID per user
   let sessionId = localStorage.getItem("chatSessionId");
   if (!sessionId) {
     sessionId = Date.now().toString() + "-" + Math.random().toString(36).substring(2);
     localStorage.setItem("chatSessionId", sessionId);
   }
 
+  // 🛡️ Admin detection
   let isAdmin = false;
+  let displayName = "Anonymous";
 
-  // ✅ Check if this session is an admin
- function checkAdmin() {
-  db.collection("admin").doc(sessionId).get().then(doc => {
-    isAdmin = doc.exists && doc.data().isAdmin;
-    loadMessages(); // Refresh with delete buttons if admin
-  });
-}
+  function checkAdmin() {
+    db.collection("admins").doc(sessionId).get().then(doc => {
+      if (doc.exists && doc.data().isAdmin) {
+        isAdmin = true;
+        displayName = doc.data().name || "Admin";
+        console.log("🔐 Admin mode enabled:", displayName);
+      } else {
+        displayName = "User";
+      }
+      loadMessages();
+    });
+  }
 
-  // ✅ Send a chat message
+  // ✏️ Send a message
   function sendMessage() {
     const message = document.getElementById("message").value.trim();
     if (!message) return;
 
     db.collection("messages").add({
-      username: "Anonymous",
+      username: displayName,
       message,
       sessionId,
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
@@ -44,19 +51,26 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("message").value = '';
   }
 
-  // ✅ Render messages with delete buttons if admin
+  // 🧹 Delete message (if admin)
+  function deleteMessage(id) {
+    if (isAdmin && confirm("Delete this message?")) {
+      db.collection("messages").doc(id).delete();
+    }
+  }
+
+  // 🖼️ Render chat messages
   function renderMessage(doc) {
     const data = doc.data();
     const time = data.timestamp?.toDate().toLocaleTimeString() || '';
     return `
       <p data-id="${doc.id}">
         <strong>${data.username}</strong>: ${data.message}
-        <span style="font-size: 0.8em; color: #888;">${time}</span>
+        <span style="font-size:0.8em; color:#888;">${time}</span>
         ${isAdmin ? `<button onclick="deleteMessage('${doc.id}')">🗑️</button>` : ''}
       </p>`;
   }
 
-  // ✅ Load messages in real time
+  // 🔃 Load and show chat messages
   function loadMessages() {
     db.collection("messages").orderBy("timestamp").onSnapshot(snapshot => {
       const chat = document.getElementById("chat");
@@ -68,16 +82,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ✅ Delete a message (admin only)
-  function deleteMessage(id) {
-    if (confirm("Delete this message?")) {
-      db.collection("messages").doc(id).delete();
-    }
-  }
-
-  // Expose to window
+  // 👇 Expose to HTML
   window.sendMessage = sendMessage;
   window.deleteMessage = deleteMessage;
 
+  // ✅ Start by checking if user is admin
   checkAdmin();
 });
