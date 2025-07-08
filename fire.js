@@ -1,13 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const firebaseConfig = {
-    apiKey: "AIzaSyDk9MRYma0IUXh3D-KCsK7Ln1uBRC0gOSU",
-    authDomain: "tambayan-chat-b1b0c.firebaseapp.com",
-    projectId: "tambayan-chat-b1b0c",
-    storageBucket: "tambayan-chat-b1b0c.appspot.com",
-    messagingSenderId: "215672476320",
-    appId: "1:215672476320:web:a126f19e2d1b331ebbefc5",
-    measurementId: "G-KVXCRNMDZS"
-  };
+ const firebaseConfig = {
+  apiKey: "AIzaSyDk9MRYma0IUXh3D-KCsK7Ln1uBRC0gOSU",
+  authDomain: "tambayan-chat-b1b0c.firebaseapp.com",
+  databaseURL: "https://tambayan-chat-b1b0c-default-rtdb.firebaseio.com",
+  projectId: "tambayan-chat-b1b0c",
+  storageBucket: "tambayan-chat-b1b0c.firebasestorage.app",
+  messagingSenderId: "215672476320",
+  appId: "1:215672476320:web:0f463cf6c13e4b40bbefc5",
+  measurementId: "G-7RPQQJ8KWW"
+};
 
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
