@@ -1,13 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
- const firebaseConfig = {
-  apiKey: "AIzaSyBivT9zXL_2v3VqPOquynR1hCmOeJIuBus",
-  authDomain: "chatapp-3f107.firebaseapp.com",
-  projectId: "chatapp-3f107",
-  storageBucket: "chatapp-3f107.firebasestorage.app",
-  messagingSenderId: "822555988221",
-  appId: "1:822555988221:web:bb67cbd33b6eb3fca4ee94",
-  measurementId: "G-N3RYWVW8LB"
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyBivT9zXL_2v3VqPOquynR1hCmOeJIuBus",
+    authDomain: "chatapp-3f107.firebaseapp.com",
+    projectId: "chatapp-3f107",
+    storageBucket: "chatapp-3f107.firebasestorage.app",
+    messagingSenderId: "822555988221",
+    appId: "1:822555988221:web:bb67cbd33b6eb3fca4ee94",
+    measurementId: "G-N3RYWVW8LB"
+  };
 
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
