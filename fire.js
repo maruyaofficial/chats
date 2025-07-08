@@ -22,12 +22,12 @@ document.addEventListener("DOMContentLoaded", function () {
   let isAdmin = false;
 
   // ✅ Check if this session is an admin
-  function checkAdmin() {
-    db.collection("admins").doc(sessionId).get().then(doc => {
-      isAdmin = doc.exists && doc.data().isAdmin;
-      loadMessages(); // refresh with delete buttons if admin
-    });
-  }
+ function checkAdmin() {
+  db.collection("admin").doc(sessionId).get().then(doc => {
+    isAdmin = doc.exists && doc.data().isAdmin;
+    loadMessages(); // Refresh with delete buttons if admin
+  });
+}
 
   // ✅ Send a chat message
   function sendMessage() {
