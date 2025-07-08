@@ -18,6 +18,25 @@ document.addEventListener("DOMContentLoaded", function () {
     sessionId = Date.now().toString() + "-" + Math.random().toString(36).substring(2);
     localStorage.setItem("chatSessionId", sessionId);
   }
+    function askNameIfNew() {
+    db.collection("users").doc(sessionId).get().then(doc => {
+      if (doc.exists) {
+        displayName = doc.data().name || "Anonymous";
+        checkAdmin();
+      } else {
+        const name = prompt("Enter your display name:");
+        displayName = name?.trim() || "Anonymous";
+
+        db.collection("users").doc(sessionId).set({
+          name: displayName,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+          checkAdmin();
+        });
+      }
+    });
+  }
+
 
   // 🛡️ Admin detection
   let isAdmin = false;
