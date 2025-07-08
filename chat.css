@@ -1,0 +1,24 @@
+.chatbox-container {
+  max-width: 500px;
+  margin: auto;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  font-family: Arial, sans-serif;
+}
+.chat-window {
+  border: 1px solid #ccc;
+  height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: #fff;
+}
+input[type="text"] {
+  width: calc(100% - 80px);
+  padding: 5px;
+}
+button {
+  padding: 5px 10px;
+}
