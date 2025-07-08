@@ -10,37 +10,19 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
   const db = firebase.firestore();
-
-  const ui = new firebaseui.auth.AuthUI(auth);
-  ui.start('#firebaseui-auth-container', {
-    signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
-    callbacks: { signInSuccessWithAuthResult: () => false }
-  });
-
-  function showChat() {
-    document.getElementById('login-container').style.display = 'none';
-    document.getElementById('chatbox').style.display = 'block';
-    loadMessages();
-  }
 
   function sendMessage() {
     const message = document.getElementById("message").value.trim();
-    const user = auth.currentUser;
-    if (!message || !user) return;
+    if (!message) return;
 
-    db.collection("users").doc(user.uid).get().then(doc => {
-      const profile = doc.data();
-      db.collection("messages").add({
-        uid: user.uid,
-        username: profile?.name || user.displayName || "User",
-        avatar: profile?.avatar || user.photoURL || "",
-        message,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      document.getElementById("message").value = '';
+    db.collection("messages").add({
+      username: "Anonymous",
+      avatar: "",
+      message,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
     });
+    document.getElementById("message").value = '';
   }
 
   function loadMessages() {
@@ -52,7 +34,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const time = data.timestamp?.toDate().toLocaleTimeString() || '';
         chat.innerHTML += `
           <p>
-            <img src="${data.avatar}" width="30" height="30" style="border-radius:50%; vertical-align:middle;" />
             <strong>${data.username}</strong>: ${data.message}
             <span style="font-size:0.8em; color:#888;">${time}</span>
           </p>`;
@@ -61,22 +42,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  function logout() {
-    auth.signOut().then(() => location.reload());
-  }
-
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      db.collection("users").doc(user.uid).set({
-        name: user.displayName,
-        avatar: user.photoURL
-      }, { merge: true }).then(showChat);
-    } else {
-      document.getElementById('login-container').style.display = 'block';
-      document.getElementById('chatbox').style.display = 'none';
-    }
-  });
-
   window.sendMessage = sendMessage;
-  window.logout = logout;
+  loadMessages();
 });
