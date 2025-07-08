@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
     db.collection("admin").doc(sessionId).get().then(doc => {
       if (doc.exists && doc.data().isAdmin) {
         isAdmin = true;
-        displayName = doc.data().name || "Admin";
+        displayName = doc.data().name || "AdminMaruya";
         console.log("🔐 Admin mode enabled:", displayName);
       } else {
         displayName = "User";
