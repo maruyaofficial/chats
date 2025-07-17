@@ -19,7 +19,7 @@
     }
 
     .chat-window {
-      height: 250px;
+      height: 350px;
       overflow-y: auto;
       background: #111;
       padding: 10px;
